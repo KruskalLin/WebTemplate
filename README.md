@@ -2,8 +2,6 @@
 A web application template built with Vue and Spring Boot.
 working on it now...
 
-- [ ] integrate frontend and backend
-
 ### Frontend
 - [X] token&roles authorization with axios&vuex
 - [X] mock
@@ -12,10 +10,22 @@ working on it now...
 - [ ] mobile adaptation
 - [ ] themes
 - [ ] performance monitor
+- [ ] websocket
 
 ### Backend
-- [X] tokens&roles authorization with Spring Security
-- [X] CORS
-- [X] upload files
+- [X] tokens&roles authorization
+- [ ] upload files
+- [ ] Docker
+- [ ] Nginx
+- [ ] commandLineRunner
+- [ ] cache
+- [ ] webflux
+- [ ] swagger
+- [ ] actuator
+- [ ] elasticsearch
+- [ ] admin
+- [ ] time clock
+- [ ] mybatis
+- [ ] websocket
 
 
