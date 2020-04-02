@@ -2,9 +2,11 @@ import Mock from 'mockjs'
 import { param2Obj } from '../src/utils'
 
 import user from './user'
+import table from './table'
 
 const mocks = [
-  ...user
+  ...user,
+  ...table
 ]
 
 // for front mock
@@ -12,6 +14,7 @@ const mocks = [
 // which will cause many of your third-party libraries to be invalidated(like progress event).
 export function mockXHR() {
   // mock patch
+  // https://github.com/nuysoft/Mock/issues/300
   Mock.XHR.prototype.proxy_send = Mock.XHR.prototype.send
   Mock.XHR.prototype.send = function() {
     if (this.custom.xhr) {

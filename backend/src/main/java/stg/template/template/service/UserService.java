@@ -19,6 +19,7 @@ import stg.template.template.exception.ResourceNotFoundException;
  * @Todo:
  */
 @Service
+@CacheConfig(cacheNames="user")
 public class UserService {
     @Autowired
     private UserDao userRepository;
@@ -27,19 +28,20 @@ public class UserService {
         return userRepository.findAll(specification, pageable);
     }
 
-    @CachePut(value = "cache", key = "#user.id")
+    @CachePut(key = "#user.id")
     public User save(User user) {
         userRepository.save(user);
         return user;
     }
 
     // beforeInvocation means executing before invoking this method
-    @CacheEvict(value = "cache", key = "#user.id", beforeInvocation = true)
+    @CacheEvict(key = "#user.id", beforeInvocation = true)
     public User delete(User user) {
+        userRepository.delete(user);
         return user;
     }
 
-    @Cacheable(value="cache", key = "#username")
+    @Cacheable(key = "#username")
     public User findByUsername(String username){
         User user =  userRepository.findByUsername(username).orElseThrow(
                 () -> new ResourceNotFoundException("User", "username", username)
@@ -48,7 +50,7 @@ public class UserService {
     }
 
 
-    @CacheEvict(value={"cache"}, allEntries = true)
+    @CacheEvict(allEntries = true)
     public void removeAllCache(){
     }
 

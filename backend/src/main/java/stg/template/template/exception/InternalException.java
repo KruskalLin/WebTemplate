@@ -11,12 +11,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @Todo:
  */
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-public class InternalException extends RuntimeException {
+public class InternalException extends BaseException {
     public InternalException(String message) {
-        super(message);
-    }
-
-    public InternalException(String message, Throwable cause) {
-        super(message, cause);
+        super(HttpStatus.INTERNAL_SERVER_ERROR, message);
     }
 }

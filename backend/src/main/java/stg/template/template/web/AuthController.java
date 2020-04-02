@@ -1,4 +1,5 @@
 package stg.template.template.web;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import stg.template.template.dao.UserDao;
 import stg.template.template.entity.Role;
 import stg.template.template.entity.RoleName;
 import stg.template.template.entity.User;
+import stg.template.template.exception.BadRequestException;
 import stg.template.template.exception.InternalException;
 import stg.template.template.exception.ResourceNotFoundException;
 import stg.template.template.payloads.*;
@@ -34,6 +36,7 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/")
+@Api(value = "Auth API")
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -51,7 +54,10 @@ public class AuthController {
     JwtTokenProvider tokenProvider;
 
     @PostMapping(value = "/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    @ResponseBody
+    @ApiOperation(value = "Log in")
+    @ApiImplicitParams({@ApiImplicitParam(name = "loginRequest", value = "loginRequest", paramType = "LoginRequest")})
+    public APIResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         User user = userService.findByUsername(loginRequest.getUsername());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -62,15 +68,17 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+        return APIResponse.ofSuccess(new JwtAuthenticationResponse(jwt));
     }
 
 
     @PostMapping(value = "/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+    @ResponseBody
+    @ApiOperation(value = "Log out")
+    @ApiImplicitParams({@ApiImplicitParam(name = "signUpRequest", value = "signUpRequest", paramType = "SignUpRequest")})
+    public APIResponse registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if(userService.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity<>(new APIResponse("Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Username is already taken!");
         }
         User user = new User(signUpRequest.getUsername(), signUpRequest.getPassword());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -78,31 +86,40 @@ public class AuthController {
                 .orElseThrow(() -> new InternalException("User Role not set"));
         user.setRoles(Collections.singleton(userRole));
         User result = userService.save(user);
-        return new ResponseEntity<>(new APIResponse("User registered successfully"), HttpStatus.ACCEPTED);
+        return APIResponse.ofMessage("User registered successfully");
     }
 
 
     @GetMapping("/user/{username}")
-    public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
+    @ResponseBody
+    @ApiOperation(value = "Get user profile by username")
+    @ApiImplicitParams({@ApiImplicitParam(name = "username", value = "username", paramType = "String")})
+    public APIResponse getUserProfile(@PathVariable(value = "username") String username) {
         User user = userService.findByUsername(username);
-        return new UserProfile(user.getId(), user.getUsername(), user.getRoles());
+        return APIResponse.ofSuccess(new UserProfile(user.getId(), user.getUsername(), user.getRoles()));
     }
 
 
 
-    @RequestMapping(value = "/updateUser")
-    public ResponseEntity<?> updateUser(@RequestParam String username, @RequestParam String password) {
+    @GetMapping(value = "/updateUser")
+    @ResponseBody
+    @ApiOperation(value = "Update user's password by username")
+    @ApiImplicitParams({@ApiImplicitParam(name = "username", value = "username", paramType = "String"), @ApiImplicitParam(name = "password", value = "password", paramType = "String")})
+    public APIResponse updateUserPassword(@RequestParam String username, @RequestParam String password) {
         User user = userService.findByUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         userService.save(user);
-        return new ResponseEntity<>(new APIResponse("User update successfully"), HttpStatus.ACCEPTED);
+        return APIResponse.ofMessage("User update successfully");
     }
 
-    @RequestMapping(value = "/deleteUser")
-    public ResponseEntity<?> deleteUser(@RequestParam String username) {
+    @GetMapping(value = "/deleteUser")
+    @ResponseBody
+    @ApiOperation(value = "Delelte user by username")
+    @ApiImplicitParams({@ApiImplicitParam(name = "username", value = "username", paramType = "String")})
+    public APIResponse deleteUser(@RequestParam String username) {
         User user = userService.findByUsername(username);
         userService.delete(user);
-        return new ResponseEntity<>(new APIResponse("User delete successfully"), HttpStatus.ACCEPTED);
+        return APIResponse.ofMessage("User delete successfully");
     }
 
 

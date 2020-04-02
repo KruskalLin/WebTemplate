@@ -1,5 +1,9 @@
 package stg.template.template.payloads;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -9,26 +13,14 @@ import javax.validation.constraints.NotBlank;
  * @Date: 2018/7/9
  * @Todo:
  */
+@Data
+@ApiModel(value = "LoginRequest", description = "Login request")
 public class LoginRequest {
     @NotBlank
+    @ApiModelProperty(value = "username", required = true, dataType = "String")
     private String username;
 
     @NotBlank
+    @ApiModelProperty(value = "password", required = true, dataType = "String")
     private String password;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

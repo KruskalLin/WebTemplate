@@ -1,5 +1,10 @@
 package stg.template.template.payloads;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.List;
 
 /**
@@ -9,29 +14,13 @@ import java.util.List;
  * @Date: 2018/2/19
  * @Todo:
  */
+@Data
+@AllArgsConstructor
+@ApiModel(value = "ListData", description = "ListData")
 public class ListData<T> {
+    @ApiModelProperty(value = "items in one page", required = true, dataType = "List<T>")
     private List<T> items;
 
+    @ApiModelProperty(value = "the number of all items", required = true, dataType = "Integer")
     private int total;
-
-    public ListData(List<T> items, int total) {
-        this.items = items;
-        this.total = total;
-    }
-
-    public List<T> getItems() {
-        return items;
-    }
-
-    public void setItems(List<T> items) {
-        this.items = items;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
 }

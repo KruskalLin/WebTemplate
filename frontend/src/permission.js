@@ -6,9 +6,9 @@ import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
-NProgress.configure({ showSpinner: true }) // NProgress Configuration
+NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/signup'] // no redirect whitelist
+const whiteList = ['/login'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -21,7 +21,7 @@ router.beforeEach(async(to, from, next) => {
   const hasToken = getToken()
 
   if (hasToken) {
-    if (to.path === '/login' || to.path === '/signup') {
+    if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })
       NProgress.done()

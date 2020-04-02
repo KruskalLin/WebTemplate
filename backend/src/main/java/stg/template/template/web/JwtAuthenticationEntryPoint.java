@@ -1,5 +1,7 @@
 package stg.template.template.web;
 
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
@@ -18,15 +20,15 @@ import java.io.IOException;
  * @Date: 2018/7/9
  * @Todo:
  */
+@Slf4j
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);
     @Override
     public void commence(HttpServletRequest httpServletRequest,
                          HttpServletResponse httpServletResponse,
                          AuthenticationException e) throws IOException, ServletException {
-        logger.error("Responding with unauthorized error. Message - {}", e.getMessage());
+        log.error("Responding with unauthorized error. Message - {}", e.getMessage());
         httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                 "Sorry, You're not authorized to access this resource.");
     }

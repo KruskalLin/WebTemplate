@@ -1,40 +1,32 @@
-import Mock from 'mockjs'
 
 const tokens = {
   admin: {
     token: 'admin-token'
   },
-  user: {
-    token: 'user-token'
+  editor: {
+    token: 'editor-token'
   }
 }
 
 const users = {
   'admin-token': {
-    roles: ['ROLE_ADMIN'],
-    name: 'admin'
+    roles: ['admin'],
+    introduction: 'I am a super administrator',
+    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    name: 'Super Admin'
   },
-  'user-token': {
-    roles: ['ROLE_USER'],
-    name: 'user'
+  'editor-token': {
+    roles: ['editor'],
+    introduction: 'I am an editor',
+    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    name: 'Normal Editor'
   }
 }
-
-const data = Mock.mock({
-  'items|30': [{
-    id: '@id',
-    title: '@sentence(10, 20)',
-    'status|1': ['published', 'draft', 'deleted'],
-    author: 'name',
-    display_time: '@datetime',
-    pageviews: '@integer(300, 5000)'
-  }]
-})
 
 export default [
   // user login
   {
-    url: '/signin',
+    url: '/user/login',
     type: 'post',
     response: config => {
       const { username } = config.body
@@ -78,18 +70,14 @@ export default [
     }
   },
 
-  // user list
+  // user logout
   {
-    url: '/getUserList',
-    type: 'get',
-    response: config => {
-      const items = data.items
+    url: '/user/logout',
+    type: 'post',
+    response: _ => {
       return {
         code: 20000,
-        data: {
-          total: items.length,
-          items: items
-        }
+        data: 'success'
       }
     }
   }
