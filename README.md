@@ -9,23 +9,16 @@ working on it now...
 - [ ] i18n
 - [ ] mobile adaptation
 - [ ] themes
-- [ ] performance monitor
 - [ ] websocket
 
 ### Backend
-- [X] tokens&roles authorization
-- [ ] upload files
-- [ ] Docker
-- [ ] Nginx
-- [ ] commandLineRunner
-- [ ] cache
-- [ ] webflux
-- [ ] swagger
-- [ ] actuator
-- [ ] elasticsearch
-- [ ] admin
-- [ ] time clock
-- [ ] mybatis
+- [X] tokens&roles authorization with Security&JPA
+- [X] upload files
+- [X] graylog
+- [X] redis cache
+- [X] swagger
+- [X] actuator
+- [ ] data sharding
 - [ ] websocket
 
 
